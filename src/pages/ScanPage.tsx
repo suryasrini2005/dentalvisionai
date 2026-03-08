@@ -78,19 +78,23 @@ export default function ScanPage() {
     }
 
     if (!imageBase64) {
-      // Demo mode: use a placeholder and let AI respond
+      // Demo mode: create a realistic-sized placeholder
       toast.info('No camera available — running in demo mode');
-      // Create a tiny blank image for demo
       const canvas = document.createElement('canvas');
-      canvas.width = 100;
-      canvas.height = 100;
+      canvas.width = 640;
+      canvas.height = 480;
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        ctx.fillStyle = '#f0f0f0';
-        ctx.fillRect(0, 0, 100, 100);
-        ctx.fillStyle = '#333';
-        ctx.font = '12px sans-serif';
-        ctx.fillText('Demo', 30, 55);
+        // Draw a simple dental-themed scene
+        ctx.fillStyle = '#e8e8e8';
+        ctx.fillRect(0, 0, 640, 480);
+        ctx.fillStyle = '#cccccc';
+        ctx.fillRect(200, 150, 240, 180);
+        ctx.fillStyle = '#888888';
+        ctx.font = 'bold 24px sans-serif';
+        ctx.fillText('Dental Object', 230, 250);
+        ctx.font = '16px sans-serif';
+        ctx.fillText('Demo Image', 255, 280);
       }
       imageBase64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
     }
