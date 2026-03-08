@@ -1,1 +1,4 @@
 project_id = "tinisjzjmheqpslllmxg"
+
+[functions.identify-dental-object]
+verify_jwt = false
