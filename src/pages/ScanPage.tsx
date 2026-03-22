@@ -134,6 +134,11 @@ export default function ScanPage() {
 
       setMatchedObject(matched || null);
       setScanPhase('done');
+      if (!isPro) {
+        const newCount = freeScansUsed + 1;
+        setFreeScansUsed(newCount);
+        localStorage.setItem('freeScansUsed', String(newCount));
+      }
     } catch (err: any) {
       console.error('Scan error:', err);
       toast.error(err.message || 'Failed to analyze image');
