@@ -5,6 +5,7 @@ import { Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
+import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
 
 export default function AuthPage() {
