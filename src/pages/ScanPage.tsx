@@ -393,6 +393,19 @@ export default function ScanPage() {
           </motion.button>
         </div>
       )}
+
+      {/* Free scan counter */}
+      {!isPro && scanPhase === 'idle' && (
+        <div className="absolute top-20 left-0 right-0 z-10 flex justify-center">
+          <div className="bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs text-muted-foreground border border-border">
+            {freeScansUsed < FREE_SCAN_LIMIT
+              ? `${FREE_SCAN_LIMIT - freeScansUsed} free scans remaining`
+              : 'No free scans left'}
+          </div>
+        </div>
+      )}
+
+      <PaywallModal open={showPaywall} onClose={() => setShowPaywall(false)} />
     </div>
   );
 }
