@@ -12,6 +12,11 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { PaywallModal } from '@/components/PaywallModal';
 
 const Index = () => {
+  const { user } = useAuth();
+  const { isPro } = useSubscription();
+  const [showPaywall, setShowPaywall] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <MobileLayout>
       {/* Header */}
