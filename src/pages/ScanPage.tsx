@@ -78,6 +78,10 @@ export default function ScanPage() {
   };
 
   const handleScan = async () => {
+    if (!isPro && freeScansUsed >= FREE_SCAN_LIMIT) {
+      setShowPaywall(true);
+      return;
+    }
     setIsScanning(true);
     setScanPhase('capturing');
 
