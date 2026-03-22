@@ -1,14 +1,43 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Crown, LogIn } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { QuickActions } from '@/components/home/QuickActions';
 import { RecentScans } from '@/components/home/RecentScans';
 import { CategoryGrid } from '@/components/home/CategoryGrid';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/hooks/useSubscription';
+import { PaywallModal } from '@/components/PaywallModal';
 
 const Index = () => {
+  const { user } = useAuth();
+  const { isPro } = useSubscription();
+  const [showPaywall, setShowPaywall] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <MobileLayout>
       {/* Header */}
       <header className="gradient-hero pt-12 pb-6 px-4">
+        <div className="flex justify-end mb-2">
+          {user ? (
+            isPro ? (
+              <span className="inline-flex items-center gap-1 text-xs font-medium bg-accent/10 text-accent px-2.5 py-1 rounded-full">
+                <Crown className="w-3 h-3" /> Pro
+              </span>
+            ) : (
+              <Button size="sm" variant="outline" onClick={() => setShowPaywall(true)} className="text-xs">
+                <Crown className="w-3 h-3 mr-1" /> Upgrade
+              </Button>
+            )
+          ) : (
+            <Button size="sm" variant="outline" onClick={() => navigate('/auth')} className="text-xs">
+              <LogIn className="w-3 h-3 mr-1" /> Sign In
+            </Button>
+          )}
+        </div>
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -66,6 +95,8 @@ const Index = () => {
           For learning purposes only.
         </p>
       </footer>
+
+      <PaywallModal open={showPaywall} onClose={() => setShowPaywall(false)} />
     </MobileLayout>
   );
 };

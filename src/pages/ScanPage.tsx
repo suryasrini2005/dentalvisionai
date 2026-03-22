@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, X, Zap, RotateCcw, Image, AlertCircle } from 'lucide-react';
+import { Camera, X, Zap, RotateCcw, Image, AlertCircle, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { dentalObjects } from '@/data/dentalData';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/hooks/useSubscription';
+import { PaywallModal } from '@/components/PaywallModal';
 
 interface AIResult {
   name: string;
@@ -19,6 +22,9 @@ interface AIResult {
 
 export default function ScanPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { isPro } = useSubscription();
+  const [showPaywall, setShowPaywall] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -26,6 +32,10 @@ export default function ScanPage() {
   const [aiResult, setAiResult] = useState<AIResult | null>(null);
   const [matchedObject, setMatchedObject] = useState<typeof dentalObjects[0] | null>(null);
   const [scanPhase, setScanPhase] = useState<'idle' | 'capturing' | 'analyzing' | 'done'>('idle');
+  const [freeScansUsed, setFreeScansUsed] = useState(() => {
+    return parseInt(localStorage.getItem('freeScansUsed') || '0', 10);
+  });
+  const FREE_SCAN_LIMIT = 3;
 
   useEffect(() => {
     startCamera();
@@ -68,6 +78,10 @@ export default function ScanPage() {
   };
 
   const handleScan = async () => {
+    if (!isPro && freeScansUsed >= FREE_SCAN_LIMIT) {
+      setShowPaywall(true);
+      return;
+    }
     setIsScanning(true);
     setScanPhase('capturing');
 
@@ -131,6 +145,11 @@ export default function ScanPage() {
 
       setMatchedObject(matched || null);
       setScanPhase('done');
+      if (!isPro) {
+        const newCount = freeScansUsed + 1;
+        setFreeScansUsed(newCount);
+        localStorage.setItem('freeScansUsed', String(newCount));
+      }
     } catch (err: any) {
       console.error('Scan error:', err);
       toast.error(err.message || 'Failed to analyze image');
@@ -374,6 +393,19 @@ export default function ScanPage() {
           </motion.button>
         </div>
       )}
+
+      {/* Free scan counter */}
+      {!isPro && scanPhase === 'idle' && (
+        <div className="absolute top-20 left-0 right-0 z-10 flex justify-center">
+          <div className="bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs text-muted-foreground border border-border">
+            {freeScansUsed < FREE_SCAN_LIMIT
+              ? `${FREE_SCAN_LIMIT - freeScansUsed} free scans remaining`
+              : 'No free scans left'}
+          </div>
+        </div>
+      )}
+
+      <PaywallModal open={showPaywall} onClose={() => setShowPaywall(false)} />
     </div>
   );
 }
