@@ -21,6 +21,23 @@ const Index = () => {
     <MobileLayout>
       {/* Header */}
       <header className="gradient-hero pt-12 pb-6 px-4">
+        <div className="flex justify-end mb-2">
+          {user ? (
+            isPro ? (
+              <span className="inline-flex items-center gap-1 text-xs font-medium bg-accent/10 text-accent px-2.5 py-1 rounded-full">
+                <Crown className="w-3 h-3" /> Pro
+              </span>
+            ) : (
+              <Button size="sm" variant="outline" onClick={() => setShowPaywall(true)} className="text-xs">
+                <Crown className="w-3 h-3 mr-1" /> Upgrade
+              </Button>
+            )
+          ) : (
+            <Button size="sm" variant="outline" onClick={() => navigate('/auth')} className="text-xs">
+              <LogIn className="w-3 h-3 mr-1" /> Sign In
+            </Button>
+          )}
+        </div>
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
