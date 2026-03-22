@@ -22,6 +22,9 @@ interface AIResult {
 
 export default function ScanPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { isPro } = useSubscription();
+  const [showPaywall, setShowPaywall] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -29,6 +32,10 @@ export default function ScanPage() {
   const [aiResult, setAiResult] = useState<AIResult | null>(null);
   const [matchedObject, setMatchedObject] = useState<typeof dentalObjects[0] | null>(null);
   const [scanPhase, setScanPhase] = useState<'idle' | 'capturing' | 'analyzing' | 'done'>('idle');
+  const [freeScansUsed, setFreeScansUsed] = useState(() => {
+    return parseInt(localStorage.getItem('freeScansUsed') || '0', 10);
+  });
+  const FREE_SCAN_LIMIT = 3;
 
   useEffect(() => {
     startCamera();
