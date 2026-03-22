@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, X, Zap, RotateCcw, Image, AlertCircle } from 'lucide-react';
+import { Camera, X, Zap, RotateCcw, Image, AlertCircle, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { dentalObjects } from '@/data/dentalData';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/hooks/useSubscription';
+import { PaywallModal } from '@/components/PaywallModal';
 
 interface AIResult {
   name: string;
