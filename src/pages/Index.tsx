@@ -1,8 +1,15 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Crown, LogIn } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { QuickActions } from '@/components/home/QuickActions';
 import { RecentScans } from '@/components/home/RecentScans';
 import { CategoryGrid } from '@/components/home/CategoryGrid';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/hooks/useSubscription';
+import { PaywallModal } from '@/components/PaywallModal';
 
 const Index = () => {
   return (
