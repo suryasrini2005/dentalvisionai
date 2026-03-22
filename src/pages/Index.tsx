@@ -95,6 +95,8 @@ const Index = () => {
           For learning purposes only.
         </p>
       </footer>
+
+      <PaywallModal open={showPaywall} onClose={() => setShowPaywall(false)} />
     </MobileLayout>
   );
 };
